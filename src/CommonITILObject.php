@@ -1463,10 +1463,7 @@ abstract class CommonITILObject extends CommonDBTM
                 ];
             }
 
-            if (
-                !isset($link['itemtype_1'], $link['items_id_1'], $link['itemtype_2'], $link['items_id_2'], $link['link'])
-                || (int) $link['items_id_1'] === 0 || (int) $link['items_id_2'] === 0
-            ) {
+            if (!isset($link['itemtype_1'], $link['items_id_1'], $link['itemtype_2'], $link['items_id_2'], $link['link'])) {
                 // Not enough data, ignore link silently
                 return;
             }
@@ -1474,6 +1471,11 @@ abstract class CommonITILObject extends CommonDBTM
             if ($link['itemtype_1'] == $this->getType() && $link['items_id_1'] == 0) {
                 // Link was added in creation form, ID was not available yet
                 $link['items_id_1'] = $this->getID();
+            }
+
+            if ((int) $link['items_id_1'] === 0 || (int) $link['items_id_2'] === 0) {
+                // Not enough data, ignore link silently
+                return;
             }
 
             $link_class = !empty($link['itemtype_1']) && !empty($link['itemtype_2'])
